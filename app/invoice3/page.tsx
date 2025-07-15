@@ -1,48 +1,22 @@
 "use client";
 import { motion } from "framer-motion";
 export default function page() {
-  const list = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      when: "beforeChildren",
-      staggerChildren: 0.3
-    }
-  }
-};
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
 
   return (
-    <div>
+    <div className="flex justify-center min-h-screen items-center">
       <motion.h1
-        initial={{ opacity: 0, y: -50 }}
+        initial={{ opacity: 0, y: -100 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 5 }}
+        className="text-4xl font-bold text-center"
       >
-        👋 Hello, welcome!
+        👋এখানে আসিস কেন? দূর হয়ে যা এই পেজ থেকে!
       </motion.h1>
-      <motion.button
-  whileHover={{ scale: 1.1 }}
-  whileTap={{ scale: 0.9 }}
->
-  Click Me
-</motion.button>
+  
 
 
-<motion.ul
-  variants={list}
-  initial="hidden"
-  animate="visible"
->
-  {[1, 2, 3].map(i => (
-    <motion.li key={i} variants={item}>Item {i}</motion.li>
-  ))}
-</motion.ul>
+<h3>go to next page invoice4</h3>
 
 
 

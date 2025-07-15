@@ -1,10 +1,9 @@
-
-"use client"
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer"
+"use client";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import {
   // BackIcon,
   HeadIcon,
-} from "./icons"
+} from "./icons";
 
 // Create styles like React Native StyleSheet
 const styles = StyleSheet.create({
@@ -126,6 +125,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
   },
+  pageNumber: {
+    position: "absolute",
+    bottom: 30,
+    left: 0,
+    right: 0,
+    textAlign: "center",
+    fontSize: 8,
+    color: "#666",
+  },
   headerText: {
     fontWeight: 700,
     color: "#0C0C0C",
@@ -160,88 +168,104 @@ const styles = StyleSheet.create({
     width: "66px",
     alignItems: "center",
   },
-})
+});
 
 // Your data type
 type InvoiceData = {
-  companyName: string
-  address: string
-  number: string
-  site: string
-  support: string
-  date: string
-  totalAmount: number
-}
+  companyName: string;
+  address: string;
+  number: string;
+  site: string;
+  support: string;
+  date: string;
+  totalAmount: number;
+};
 
 interface Data {
-  id: number
+  id: number;
   description: {
-    name: string
-    warranty: string
-    sn?: string // sn can be optional based on sample data
-  }
-  quantity: string
-  unit_price: string
-  discount: string
-  total: string
+    name: string;
+    warranty: string;
+    sn?: string; // sn can be optional based on sample data
+  };
+  quantity: string;
+  unit_price: string;
+  discount: string;
+  total: string;
 }
 
 type ChunkedPage = {
-  data: Data[]
-  startIndex: number
-}
+  data: Data[];
+  startIndex: number;
+};
 
 export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
   const chunkArray = (
     array: Data[],
     firstPageLimit: number,
     otherPagesLimit: number,
-    lastPageItemCount: number,
+    lastPageItemCount: number
   ): ChunkedPage[] => {
-    const result: ChunkedPage[] = []
-    let currentIndex = 0
+    const result: ChunkedPage[] = [];
+    let currentIndex = 0;
 
     // First page
     if (array.length > 0) {
-      result.push({ data: array.slice(currentIndex, currentIndex + firstPageLimit), startIndex: currentIndex })
-      currentIndex += firstPageLimit
+      result.push({
+        data: array.slice(currentIndex, currentIndex + firstPageLimit),
+        startIndex: currentIndex,
+      });
+      currentIndex += firstPageLimit;
     }
 
-    const remainingItems = array.length - currentIndex
+    const remainingItems = array.length - currentIndex;
 
     if (remainingItems <= 0) {
-      return result
+      return result;
     }
 
     // If remaining items are exactly or less than lastPageItemCount, put them all on the last page
     if (remainingItems <= lastPageItemCount) {
-      result.push({ data: array.slice(currentIndex, array.length), startIndex: currentIndex })
-      return result
+      result.push({
+        data: array.slice(currentIndex, array.length),
+        startIndex: currentIndex,
+      });
+      return result;
     }
 
     // If there are more items than just for the last page, distribute them
-    let itemsForIntermediatePages = remainingItems - lastPageItemCount
+    let itemsForIntermediatePages = remainingItems - lastPageItemCount;
 
     while (itemsForIntermediatePages > 0) {
-      const itemsToTake = Math.min(itemsForIntermediatePages, otherPagesLimit)
-      result.push({ data: array.slice(currentIndex, currentIndex + itemsToTake), startIndex: currentIndex })
-      currentIndex += itemsToTake
-      itemsForIntermediatePages -= itemsToTake
+      const itemsToTake = Math.min(itemsForIntermediatePages, otherPagesLimit);
+      result.push({
+        data: array.slice(currentIndex, currentIndex + itemsToTake),
+        startIndex: currentIndex,
+      });
+      currentIndex += itemsToTake;
+      itemsForIntermediatePages -= itemsToTake;
     }
 
     // Add the last page with lastPageItemCount items
     if (currentIndex < array.length) {
-      result.push({ data: array.slice(currentIndex, currentIndex + lastPageItemCount), startIndex: currentIndex })
+      result.push({
+        data: array.slice(currentIndex, currentIndex + lastPageItemCount),
+        startIndex: currentIndex,
+      });
     }
 
-    return result
-  }
+    return result;
+  };
 
   // Sample data (35 items for demonstration)
   const dataSe = [
     {
       id: 1,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days", sn: "QT45295754" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+        sn: "QT45295754",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -249,7 +273,11 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 2,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days", sn: "QT45295754" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+        sn: "QT45295754",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -257,7 +285,11 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 3,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days", sn: "QT45295754" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+        sn: "QT45295754",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -265,7 +297,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 4,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -273,7 +308,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 5,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -281,7 +319,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 6,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -289,7 +330,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 7,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -297,7 +341,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 8,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -305,7 +352,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 9,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -313,7 +363,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 10,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -321,7 +374,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 11,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -329,7 +385,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 12,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -337,7 +396,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 13,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -345,7 +407,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 14,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -353,7 +418,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 15,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -361,7 +429,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 16,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -369,7 +440,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 17,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -377,7 +451,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 18,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -385,7 +462,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 19,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -393,7 +473,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 20,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -401,7 +484,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 21,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -409,7 +495,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 22,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -417,7 +506,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 23,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -425,7 +517,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 24,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -433,7 +528,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 25,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -441,7 +539,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 26,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -449,7 +550,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 27,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -457,7 +561,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 28,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -465,7 +572,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 29,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -473,7 +583,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 30,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -481,7 +594,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 31,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -489,7 +605,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 32,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -497,7 +616,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 33,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -505,7 +627,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 34,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
@@ -513,77 +638,104 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
     },
     {
       id: 35,
-      description: { name: "power supply chaina Hi-power 500w", warranty: "365 days" },
+      description: {
+        name: "power supply chaina Hi-power 500w",
+        warranty: "365 days",
+      },
       quantity: "20",
       unit_price: "50",
       discount: "40",
       total: "1054",
     },
-  ]
+  ];
 
-  const firstPageLimit = 14
-  const otherPagesLimit = 17
-  const lastPageItemCount = 5 // Desired number of items on the last page
+  const firstPageLimit = 14;
+  const otherPagesLimit = 17;
+  const lastPageItemCount = 5; // Desired number of items on the last page
 
-  const chunkedData = chunkArray(dataSe, firstPageLimit, otherPagesLimit, lastPageItemCount)
+  const chunkedData = chunkArray(
+    dataSe,
+    firstPageLimit,
+    otherPagesLimit,
+    lastPageItemCount
+  );
 
   return (
     <Document>
       {chunkedData.map((pageChunk, pageIndex) => {
-        const isFirstPage = pageIndex === 0
-        const isLastPage = pageIndex === chunkedData.length - 1
+        const isFirstPage = pageIndex === 0;
+        const isLastPage = pageIndex === chunkedData.length - 1;
         return (
           <Page key={pageIndex} size="A4" style={styles.page}>
             {isFirstPage && (
               <View>
-
                 <View style={styles.section}>
                   <View style={styles.invoiceRowHeader}>
                     <View style={styles.leftContentMain}>
-                      <View style={{flexDirection:'row' , alignItems:'center' ,gap:'8px'} }>
-                      <HeadIcon />
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <HeadIcon />
                         <Text style={styles.header}>{data.companyName} </Text>
                       </View>
                     </View>
-
                   </View>
                 </View>
               </View>
             )}
             {!isFirstPage && (
-
-                <View style={styles.section}>
-                  <View style={styles.invoiceRowHeader}>
-                    <View style={styles.leftContentMain}>
-                      <View style={{flexDirection:'row' , alignItems:'center' ,gap:'8px'} }>
+              <View style={styles.section}>
+                <View style={styles.invoiceRowHeader}>
+                  <View style={styles.leftContentMain}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
                       <HeadIcon />
-                        <Text style={styles.header}>{data.companyName} </Text>
-                      </View>
+                      <Text style={styles.header}>{data.companyName} </Text>
                     </View>
-
                   </View>
                 </View>
+              </View>
             )}
-            <View style={[styles.sectionTwo, { backgroundColor: "#fff", zIndex: 1 }]}>
+            <View
+              style={[
+                styles.sectionTwo,
+                { backgroundColor: "#fff", zIndex: 1 },
+              ]}
+            >
               {/* <View style={{position:'absolute' , backgroundColor:'#fff', top:'20%', zIndex:-1, left:'45%', alignItems:'center',justifyContent:'center'}}>
           <BackIcon />
           </View> */}
               {isFirstPage && (
-                <View style={[styles.midBranchDiv, { backgroundColor: "#fff" }]}>
+                <View
+                  style={[styles.midBranchDiv, { backgroundColor: "#fff" }]}
+                >
                   <View style={styles.leftDiv}>
                     <Text style={styles.branchAndTaxHead}>Dhaka Branch</Text>
                     <View style={{ flexDirection: "column", gap: "4px" }}>
                       <Text style={styles.headLabelP}>
-                        <Text style={styles.leftDivText}>Address:</Text> Motijheel, Dhaka 1000
+                        <Text style={styles.leftDivText}>Address:</Text>{" "}
+                        Motijheel, Dhaka 1000
                       </Text>
                       <Text style={styles.headLabelP}>
-                        <Text style={styles.leftDivText}>Email:</Text> Support@alzafpos.com
+                        <Text style={styles.leftDivText}>Email:</Text>{" "}
+                        Support@alzafpos.com
                       </Text>
                       <Text style={styles.headLabelP}>
-                        <Text style={styles.leftDivText}>Phone:</Text> +8800138715416
+                        <Text style={styles.leftDivText}>Phone:</Text>{" "}
+                        +8800138715416
                       </Text>
                       <Text style={styles.headLabelP}>
-                        <Text style={styles.leftDivText}>Web:</Text> www.alzafpos.com
+                        <Text style={styles.leftDivText}>Web:</Text>{" "}
+                        www.alzafpos.com
                       </Text>
                     </View>
                   </View>
@@ -591,16 +743,20 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                     <Text style={styles.branchAndTaxHead}>Text Invoice</Text>
                     <View style={{ flexDirection: "column", gap: "4px" }}>
                       <Text style={styles.headLabelP}>
-                        <Text style={styles.leftDivText}>Invoice No:</Text> Motijheel, Dhaka 1000
+                        <Text style={styles.leftDivText}>Invoice No:</Text>{" "}
+                        Motijheel, Dhaka 1000
                       </Text>
                       <Text style={styles.headLabelP}>
-                        <Text style={styles.leftDivText}>Chalan No:</Text> Support@alzafpos.com
+                        <Text style={styles.leftDivText}>Chalan No:</Text>{" "}
+                        Support@alzafpos.com
                       </Text>
                       <Text style={styles.headLabelP}>
-                        <Text style={styles.leftDivText}>Date:</Text> +8800138715416
+                        <Text style={styles.leftDivText}>Date:</Text>{" "}
+                        +8800138715416
                       </Text>
                       <Text style={styles.headLabelP}>
-                        <Text style={styles.leftDivText}>Zone:</Text> www.alzafpos.com
+                        <Text style={styles.leftDivText}>Zone:</Text>{" "}
+                        www.alzafpos.com
                       </Text>
                     </View>
                   </View>
@@ -631,34 +787,51 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                 </View>
                 {/* Table Body */}
                 {pageChunk.data.map((row, index) => {
-                  const serialNo = pageChunk.startIndex + index + 1 // Corrected serial number calculation
+                  const serialNo = pageChunk.startIndex + index + 1; // Corrected serial number calculation
                   return (
                     <View key={index} style={[styles.tableRow]}>
                       <View style={[styles.tableCell, styles.colSlNo]}>
                         <Text style={styles.cellText}>{serialNo}</Text>
                       </View>
                       <View style={[styles.tableCell, styles.colDescription]}>
-                        {Object.entries(row.description ?? {}).map(([Key, value]) => (
-                          <Text key={Key} style={styles.cellText}>
-                            <Text style={{ fontSize: "8px", fontWeight: "600" }}>{Key}:</Text>
-                            <Text style={{ fontSize: "8px" }}> {String(value)}</Text>
-                          </Text>
-                        ))}
+                        {Object.entries(row.description ?? {}).map(
+                          ([Key, value]) => (
+                            <Text key={Key} style={styles.cellText}>
+                              <Text
+                                style={{ fontSize: "8px", fontWeight: "600" }}
+                              >
+                                {Key}:
+                              </Text>
+                              <Text style={{ fontSize: "8px" }}>
+                                {" "}
+                                {String(value)}
+                              </Text>
+                            </Text>
+                          )
+                        )}
                       </View>
                       <View style={[styles.tableCell, styles.colQuantity]}>
-                        <Text style={[styles.cellText, { fontSize: "8px" }]}>{row.quantity}</Text>
+                        <Text style={[styles.cellText, { fontSize: "8px" }]}>
+                          {row.quantity}
+                        </Text>
                       </View>
                       <View style={[styles.tableCell, styles.colUnitPrice]}>
-                        <Text style={[styles.cellText, { fontSize: "8px" }]}>{row.unit_price}</Text>
+                        <Text style={[styles.cellText, { fontSize: "8px" }]}>
+                          {row.unit_price}
+                        </Text>
                       </View>
                       <View style={[styles.tableCell, styles.colDiscount]}>
-                        <Text style={[styles.cellText, { fontSize: "8px" }]}>{row.discount}</Text>
+                        <Text style={[styles.cellText, { fontSize: "8px" }]}>
+                          {row.discount}
+                        </Text>
                       </View>
                       <View style={[styles.tableCellLast, styles.colTotal]}>
-                        <Text style={[styles.cellText, { fontSize: "8px" }]}>{row.total}</Text>
+                        <Text style={[styles.cellText, { fontSize: "8px" }]}>
+                          {row.total}
+                        </Text>
                       </View>
                     </View>
-                  )
+                  );
                 })}
               </View>
               {/* amount calculation start */}
@@ -673,8 +846,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                   >
                     <View>
                       <Text style={{ fontSize: "8px", fontWeight: "400" }}>
-                        <Text style={{ color: "#0C0C0C", fontWeight: "600" }}>IN WORD:</Text> Twenty - Eight Thousand
-                        Seven Hundred Taka Only
+                        <Text style={{ color: "#0C0C0C", fontWeight: "600" }}>
+                          IN WORD:
+                        </Text>{" "}
+                        Twenty - Eight Thousand Seven Hundred Taka Only
                       </Text>
                     </View>
                     <View>
@@ -696,7 +871,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                             },
                           ]}
                         >
-                          <Text style={{ fontWeight: "400", fontSize: "8px" }}>Total Amount</Text> <Text>0.00</Text>
+                          <Text style={{ fontWeight: "400", fontSize: "8px" }}>
+                            Total Amount
+                          </Text>{" "}
+                          <Text>0.00</Text>
                         </View>
                         <View
                           style={[
@@ -709,7 +887,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                             },
                           ]}
                         >
-                          <Text style={{ fontWeight: "600", fontSize: "8px" }}>Grand Total</Text> <Text>0.00</Text>
+                          <Text style={{ fontWeight: "600", fontSize: "8px" }}>
+                            Grand Total
+                          </Text>{" "}
+                          <Text>0.00</Text>
                         </View>
                         <View
                           style={[
@@ -722,7 +903,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                             },
                           ]}
                         >
-                          <Text style={{ fontWeight: "400", fontSize: "8px" }}>Previous Due</Text> <Text>0.00</Text>
+                          <Text style={{ fontWeight: "400", fontSize: "8px" }}>
+                            Previous Due
+                          </Text>{" "}
+                          <Text>0.00</Text>
                         </View>
                       </View>
                       <View style={{ flexDirection: "column", gap: "4px" }}>
@@ -737,7 +921,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                             },
                           ]}
                         >
-                          <Text style={{ fontWeight: "400", fontSize: "8px" }}>Paid</Text> <Text>0.00</Text>
+                          <Text style={{ fontWeight: "400", fontSize: "8px" }}>
+                            Paid
+                          </Text>{" "}
+                          <Text>0.00</Text>
                         </View>
                         <View
                           style={[
@@ -749,7 +936,10 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                             },
                           ]}
                         >
-                          <Text style={{ fontWeight: "600", fontSize: "8px" }}>Current Due </Text> <Text>0.00</Text>
+                          <Text style={{ fontWeight: "600", fontSize: "8px" }}>
+                            Current Due{" "}
+                          </Text>{" "}
+                          <Text>0.00</Text>
                         </View>
                       </View>
                     </View>
@@ -783,7 +973,8 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                           color: "#171717",
                         }}
                       >
-                        - Damage caused by misuse, accidents, or unauthorized repairs
+                        - Damage caused by misuse, accidents, or unauthorized
+                        repairs
                       </Text>
                       <Text
                         style={{
@@ -808,7 +999,9 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                     </View>
                     <View style={{ marginTop: "10px" }}>
                       <Text style={{ fontSize: "8px" }}>
-                        <Text style={{ fontWeight: "600", color: "#0C0C0C" }}>Note:</Text>{" "}
+                        <Text style={{ fontWeight: "600", color: "#0C0C0C" }}>
+                          Note:
+                        </Text>{" "}
                         <Text style={{ color: "#171717" }}>CASH PAID</Text>
                       </Text>
                       <View
@@ -889,7 +1082,8 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                           fontWeight: "400",
                         }}
                       >
-                        Terms & Conditions: For any questions regarding this invoice, please contact us.
+                        Terms & Conditions: For any questions regarding this
+                        invoice, please contact us.
                       </Text>
                       <Text
                         style={{
@@ -922,7 +1116,8 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                       fontWeight: "400",
                     }}
                   >
-                    Terms & Conditions: For any questions regarding this invoice, please contact us.
+                    Terms & Conditions: For any questions regarding this
+                    invoice, please contact us.
                   </Text>
                   <Text
                     style={{
@@ -936,31 +1131,17 @@ export default function InvoiceDocumentTwo({ data }: { data: InvoiceData }) {
                 </View>
               )}
             </View>
+            {!isLastPage && (
+              <Text style={styles.pageNumber}>
+                Page {pageIndex + 1} of {chunkedData.length}
+              </Text>
+            )}
           </Page>
-        )
+        );
       })}
     </Document>
-  )
+  );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use client"
 // import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer"
